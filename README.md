@@ -20,7 +20,14 @@ On windows folow this link: http://www.oznetnerd.com/installing-ansible-windows/
 
 Clone this repository:
 ```
-git clone https://github.com/CiscoSE/dnacenter-ansible.git
+$ git clone https://github.com/CiscoSE/dnacenter-ansible.git
+$ cd dnacenter-ansible.git
+
+```
+## Command-Runner
+Command Runner allows read-only level CLI commands to run from the DNA Center API.
+```
+ansible-playbook playbooks/command-runner/dnac-command-runner.yml
 ```
 
 

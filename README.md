@@ -24,10 +24,46 @@ $ git clone https://github.com/CiscoSE/dnacenter-ansible.git
 $ cd dnacenter-ansible.git
 
 ```
+## Device-inventory
+Run this playbook to get JSON output for a list of available devices and IP address information. Please note the Sandbox ASR1000 doesn't have enbled password activated.
+
+```
+$ ansible-playbook playbooks/device-inventory/dnac-inventory.yml
+
+TASK [Inventory Details] ************************************************************
+ok: [localhost] => {
+    "msg": [
+        {
+        
+ {
+            "apManagerInterfaceIp": "",
+            "associatedWlcIp": "",
+            "bootDateTime": "2018-10-16 10:37:51",
+            "collectionInterval": "Global Default",
+            "collectionStatus": "Managed",
+            "errorCode": null,
+            "errorDescription": null,
+            "family": "Switches and Hubs",
+            "hostname": "cat_9k_1.marius.x-trem.ro",
+            "id": "1a85db61-8bf2-4717-9060-9776f42e4581",
+            "instanceTenantId": "5bd3634ab2bea0004c3ebb58",
+            "instanceUuid": "1a85db61-8bf2-4717-9060-9776f42e4581",
+            "interfaceCount": "41",
+            "inventoryStatusDetail": "<status><general code=\"FAILED_FEAT\"/><topCause code=\"UNKNOWN\"/>\n</status>",
+            "lastUpdateTime": 1553038763443,
+            "lastUpdated": "2019-03-19 23:39:23",
+            "lineCardCount": "2",
+            "lineCardId": "df065d20-8d9b-4b66-a5ed-30aab545b85b, 766f14fe-8bb6-4ac7-a58c-f456f7e2ab34",
+            "location": null,
+            "locationName": null,
+            "macAddress": "f8:7b:20:67:62:80",
+            "managementIpAddress": "10.10.22.66",
+```
+
 ## Command-Runner
 Command Runner allows read-only level CLI commands to run from the DNA Center API.
 ```
-ansible-playbook playbooks/command-runner/dnac-command-runner.yml
+$ ansible-playbook playbooks/command-runner/dnac-command-runner.yml
 ```
 The sandbox only has a few devices so select from the options by pasting the deviceId to the prompt
 
@@ -51,7 +87,7 @@ ok: [localhost] => {
         YES NVRAM  up                    up     
         \\\\nGigabitEthernet0/0     unassigned      YES NVRAM  administratively down down    \\\\nTe1/0
 ```
-
+Adjust your terminal width to make more readable.
 
 
 

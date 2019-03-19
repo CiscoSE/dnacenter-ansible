@@ -10,13 +10,17 @@ Use these playbooks to explore several ansible technigues to interact with DNA C
 ## What you will find:
 You will find several playbooks that configure DNA Center's APIs similar to the GUI. These playbook examples cover only a subset of available API feature capabilities. Due to parsing JSON for variables, some index items need to be adjusted or added to work outside the Devnet Sandbox.
 
-## Getting Starte:
+## Getting Started:
 
 Install Ansible 2.7 on a MAC or Linux
 ```
 pip install ansible
 ```
+On windows folow this link: http://www.oznetnerd.com/installing-ansible-windows/
 
+Clone this repository:
+```
+git 
 
 
 

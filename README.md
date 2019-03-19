@@ -29,8 +29,18 @@ Command Runner allows read-only level CLI commands to run from the DNA Center AP
 ```
 ansible-playbook playbooks/command-runner/dnac-command-runner.yml
 ```
+The sandbox only has a few devices so select from the options by pasting the deviceId to the prompt
 
-
+```
+TASK [DeviceId] ****************************************************************************************
+ok: [localhost] => {
+    "msg": [
+        "cat_9k_1.marius.x-trem.ro - deviceId: 1a85db61-8bf2-4717-9060-9776f42e4581",
+        "cs3850.marius.x-trem.ro - deviceId: 79d3a90b-1b95-4cd8-a9bd-6d5952814432"
+    ]
+}
+Please enter the device ID: 1a85db61-8bf2-4717-9060-9776f42e4581
+```
 
 
 

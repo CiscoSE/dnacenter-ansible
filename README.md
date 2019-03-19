@@ -40,6 +40,12 @@ ok: [localhost] => {
     ]
 }
 Please enter the device ID: 1a85db61-8bf2-4717-9060-9776f42e4581
+Please enter CLI cmd: sh ip int br
+
+TASK [Print Results] ***********************************************************************************
+ok: [localhost] => {
+    "msg": [
+        "\"[{  \\\"deviceUuid\\\":\\\"1a85db61-8bf2-4717-9060-9776f42e4581\\\" ,\\\"commandResponses\\\":{\\\"SUCCESS\\\":{\\\"sh ip int br\\\":\\\"sh ip int br\\\\nInterface              IP-Address      OK? Method Status                Protocol\\\\nVlan1                  10.10.22.97     YES NVRAM  up                    up      \\\\nGigabitEthernet0/0     unassigned      YES NVRAM  administratively down down    \\\\nTe1/0
 ```
 
 

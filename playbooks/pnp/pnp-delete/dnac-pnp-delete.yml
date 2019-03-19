@@ -1,0 +1,51 @@
+
+- name: Playbook to Delete existing Device updates and claims
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: Load Password
+    include_vars: vars.yml
+
+
+  - name: Get Token
+    uri:
+      url: "{{ dnac_url }}api/system/v1/auth/token"
+      # Calling a Login URL
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      force_basic_auth: yes
+      headers:
+        Content-Type: "application/json"
+      return_content: no
+      validate_certs: no
+      # And don't validate the server cert as it's self-signed for non-prod.
+    register: token
+
+  - name: Get PNP Device IDs
+    uri:
+      url: "{{ dnac_url }}api/v1/onboarding/pnp-device"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: pnp_device
+
+
+  - name: Delete Existing Claims
+    uri:
+      url: "{{ dnac_url }}api/v1/onboarding/pnp-device/{{pnp_device.json[0].id}}"
+      # the main API endpoint
+      method: DELETE
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no

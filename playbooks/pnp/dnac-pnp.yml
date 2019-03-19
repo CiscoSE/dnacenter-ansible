@@ -1,0 +1,163 @@
+- name: Playbook to Add Devices to Cisco DNA Center and Claim them from .csv
+  hosts: localhost
+  tasks:
+  - name: parse csv and make vars file
+    command: "python parse_csv.py pnp.csv"
+
+- name: PNP
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: Load Password
+    include_vars: vars.yml
+  - name: Load Variables
+    include_vars:
+      file: pnp.csv.yml
+      name: input
+
+  - name: Get Token
+    uri:
+      url: "{{ dnac_url }}api/system/v1/auth/token"
+      # Calling a Login URL
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      force_basic_auth: yes
+      headers:
+        Content-Type: "application/json"
+      return_content: no
+      validate_certs: no
+      # And don't validate the server cert as it's self-signed for non-prod.
+    register: token
+
+  - name: Get Workflow
+    uri:
+      url: "{{ dnac_url }}api/v1/onboarding/pnp-workflow"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: pnp
+
+  - name: Workflow Details
+    debug:
+     msg:
+      - "These are the available Workflow IDs in DNAC"
+      - "Workflow Name {{pnp.json[0].name}}: ID {{pnp.json[0].id}}"
+      - "Workflow Name {{pnp.json[1].name}}: ID {{pnp.json[1].id}}"
+      #Change to loop later
+
+  - name: PNP Device Import
+    uri:
+      url: "{{ dnac_url }}api/v1/onboarding/pnp-device/import"
+      body: '[{
+              "deviceInfo": {
+                "name": "{{ item.pnp_name }}",
+                "serialNumber": "{{ item.pnp_sn }}",
+                "pid":"{{ item.pnp_pid }}",
+                "sudiRequired": false,
+                "userSudiSerialNos": [],
+                "stack": false,
+                "aaaCredentials": {
+	              "username": "",
+	              "password": ""
+	                }
+                }
+                }]'
+      body_format: json
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: yes
+      validate_certs: no
+      status_code: 200, 201, 202, 203, 204, 205, 206, 207, 208
+    loop: "{{ input.raw_data }}"
+
+
+  - name: Get PNP Device IDs
+    uri:
+      url: "{{ dnac_url }}api/v1/onboarding/pnp-device"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: pnp_device
+
+  - name: PNP Device Details
+    debug:
+     msg:
+      - "PNP Device Name and ID"
+      - "Device Name: {{pnp_device.json[0].deviceInfo.name}} PNP Device ID: {{pnp_device.json[0].id}}"
+      - "Device Name: {{pnp_device.json[1].deviceInfo.name}} PNP Device ID: {{pnp_device.json[1].id}}"
+      - "Device Name: {{pnp_device.json[2].deviceInfo.name}} PNP Device ID: {{pnp_device.json[2].id}}"
+      - "Device Name: {{pnp_device.json[3].deviceInfo.name}} PNP Device ID: {{pnp_device.json[3].id}}"
+      - "Device Name: {{pnp_device.json[4].deviceInfo.name}} PNP Device ID: {{pnp_device.json[4].id}}"
+      - "Device Name: {{pnp_device.json[5].deviceInfo.name}} PNP Device ID: {{pnp_device.json[5].id}}"
+      - "Device Name: {{pnp_device.json[6].deviceInfo.name}} PNP Device ID: {{pnp_device.json[1].id}}"
+      - "Device Name: {{pnp_device.json[7].deviceInfo.name}} PNP Device ID: {{pnp_device.json[2].id}}"
+      - "Device Name: {{pnp_device.json[8].deviceInfo.name}} PNP Device ID: {{pnp_device.json[3].id}}"
+      - "Device Name: {{pnp_device.json[9].deviceInfo.name}} PNP Device ID: {{pnp_device.json[4].id}}"
+
+
+
+
+  - name: PNP Device Claim
+    uri:
+      url: "{{ dnac_url }}api/v1/onboarding/pnp-device/claim"
+      body: '{
+              "workflowId": "{{pnp.json[1].id}}",
+              "deviceClaimList": [
+                {
+                  "configList": [
+                    {
+                      "configId": "a7c64b02-0ba2-4139-9e9c-86b36631a865",
+                      "configParameters": [
+                        {
+                          "value": "tdub",
+                          "key": "hostname"
+                        }
+                      ]
+                    }
+                  ],
+                  "deviceId": "{{item}}"
+                }
+              ],
+              "populateInventory": true,
+              "imageId": null,
+              "projectId": null,
+              "configId": null
+            }'
+      body_format: json
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: yes
+      validate_certs: no
+      status_code: 200, 201, 202, 203, 204, 205, 206, 207, 208
+    with_items:
+      - "{{pnp_device.json[0].id}}"
+      - "{{pnp_device.json[1].id}}"
+      - "{{pnp_device.json[2].id}}"
+      - "{{pnp_device.json[3].id}}"
+      - "{{pnp_device.json[4].id}}"
+      - "{{pnp_device.json[5].id}}"
+      - "{{pnp_device.json[6].id}}"
+      - "{{pnp_device.json[7].id}}"
+      - "{{pnp_device.json[8].id}}"
+      - "{{pnp_device.json[9].id}}"

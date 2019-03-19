@@ -1,0 +1,7 @@
+
+  dnac_url: "https://sandboxdnac.cisco.com/"
+  # This is the IP and endpoint of my test DNAC unit, and the main API endpoint URL.
+  dnac_user: "devnetuser"
+  # This is the username to login to DNAC with. Needs to be abstracted, but assume someone with Ansible knowledge knows how to do this better with vault.
+  dnac_password: "Cisco123!"
+  # This is the password for my DNAC. Same as above for vault.

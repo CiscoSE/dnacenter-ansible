@@ -1,0 +1,154 @@
+#Playbook for DNAC Command Runner
+- name: Playbook for DNAC Command Runner
+  hosts: localhost
+# This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+   - vars.yml
+
+  tasks:
+
+  - name: Get Token
+    uri:
+      url: "{{ dnac_url }}api/system/v1/auth/token"
+      # Calling a Login URL
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      force_basic_auth: yes
+
+      headers:
+        Content-Type: "application/json"
+      return_content: yes
+      validate_certs: no
+      # And don't validate the server cert as it's self-signed for non-prod.
+    register: token
+
+  - name: Get network_devices
+    uri:
+      url: "{{ dnac_url }}api/v1/network-device/"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: network_device
+
+
+  - name: DeviceId
+
+    debug:
+      msg:
+        #- "asr1001-x.abc.inc - deviceId: {{ network_device.json.response[0].id }}"
+        - "cat_9k_1.marius.x-trem.ro - deviceId: {{ network_device.json.response[1].id }}"
+        - "cs3850.marius.x-trem.ro - deviceId: {{ network_device.json.response[2].id }}"
+      
+
+- name: 2nd Part
+  hosts: localhost
+# This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+    - vars.yml
+
+
+  vars_prompt:
+  - name: "deviceId"
+    prompt: "Please enter the device ID"
+    private: no
+  - name: "cmd"
+    prompt: "Please enter CLI cmd"
+    private: no
+
+  tasks:
+  - name: Delete dnac-command-runner-fileId.json
+    template: src="empty.txt" dest="dnac-command-runner-fileId.json"
+  - name: Delete dnac-command-runner-fileId.json
+    template: src="empty.txt" dest="dnac-command-runner-taskId.json"
+
+  - name: Command Runner
+    uri:
+       url: "{{ dnac_url }}api/v1/network-device-poller/cli/read-request"
+       body: {"name": "cmd", "commands": ["{{cmd}}"],"deviceUuids" : ["{{ deviceId }}"]}
+       body_format: json
+       method: POST
+       user: "{{ dnac_user }}"
+       password: "{{ dnac_password }}"
+       headers:
+         Content-Type: "application/json"
+         Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+       return_content: yes
+       validate_certs: no
+       status_code: 200, 201, 202, 203, 204, 205, 206, 207, 208
+    register: result
+
+
+  - name: Command Runner taskId to .json File
+    local_action:
+      module: copy
+      dest: "dnac-command-runner-taskId.json"
+      content: "taskId: {{ result.json.response.taskId }}"
+
+- name: 3rd Part
+  hosts: localhost
+  # This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+    - vars.yml
+    - dnac-command-runner-taskId.json
+  tasks:
+
+  - name: Get fileId
+    uri:
+      url: "{{ dnac_url }}api/v1/task/{{taskId}}"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: task
+
+  - name: create some file
+    template: src="empty.txt" dest="dnac-command-runner-fileId.json"
+
+  - name: Command Runner taskId to .json File
+    local_action:
+      module: copy
+      dest: "dnac-command-runner-fileId.json"
+      content: "{{task.json.response.progress}}"
+
+
+
+- name: 4th Part
+  hosts: localhost
+# This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+    - vars.yml
+    - dnac-command-runner-fileId.json
+
+
+  tasks:
+
+  - name: Get Command Results
+    uri:
+      url: "{{ dnac_url }}api/v1/file/{{fileId}}"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: yes
+      validate_certs: no
+    register: file
+  - name: Print Results
+    debug:
+     msg:
+       - "{{file.content | to_nice_json(indent=0)}}"

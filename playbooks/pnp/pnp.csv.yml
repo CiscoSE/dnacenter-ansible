@@ -1,0 +1,11 @@
+raw_data:
+- {pnp_name: sw1, pnp_pid: ws-c9300, pnp_sn: A1234567890}
+- {pnp_name: sw2, pnp_pid: ws-c9300, pnp_sn: B1234567890}
+- {pnp_name: sw3, pnp_pid: ws-c9300, pnp_sn: C1234567890}
+- {pnp_name: sw4, pnp_pid: ws-c9300, pnp_sn: D1234567890}
+- {pnp_name: sw5, pnp_pid: ws-c9300, pnp_sn: E1234567890}
+- {pnp_name: sw6, pnp_pid: ws-c9300, pnp_sn: F1234567890}
+- {pnp_name: sw7, pnp_pid: ws-c9300, pnp_sn: G1234567890}
+- {pnp_name: sw8, pnp_pid: ws-c9300, pnp_sn: H1234567890}
+- {pnp_name: sw9, pnp_pid: ws-c9300, pnp_sn: I1234567890}
+- {pnp_name: sw10, pnp_pid: ws-c9300, pnp_sn: J1234567890}

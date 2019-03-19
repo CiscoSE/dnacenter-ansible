@@ -1,0 +1,185 @@
+- name: Playbook Distribute Software for SWIM
+  hosts: localhost
+# This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+  - vars.yml
+
+  vars_prompt:
+  - name: Family
+    prompt: "******************************************************* \n This Play Book Destributes Image based on Golden Image \n Please select a numerical option \n
+     2 for Cisco Catalyst 9300 Switch \n Additional deviceFamily can be added to the Playbook. \n ***********************************************"
+    private: no
+
+  tasks:
+
+  - name: Get Token
+    uri:
+      url: "{{ dnac_url }}api/system/v1/auth/token"
+      # Calling a Login URL
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      force_basic_auth: yes
+      headers:
+        Content-Type: "application/json"
+      return_content: no
+      validate_certs: no
+      # And don't validate the server cert as it's self-signed for non-prod.
+    register: token
+
+
+  - name: Get SWIM Pyhsical
+    uri:
+      url: "{{ dnac_url }}api/v1/image/importation/site/-1?imageCategory=PHYSICAL"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: image
+
+  - name: SWIM Details Physical
+
+    debug:
+      msg:
+        - "deviceId: {{ image.json.response[Family | int].runningImageList[0].deviceUuidList }}"
+        - "imageId: {{ image.json.response[Family | int].runningImageList[5].imageUuid }}"
+        - "name: {{ image.json.response[Family | int].runningImageList[0].name }} "
+        - "deviceFamily: {{ image.json.response[Family | int].deviceFamily}} "
+        - "View the entire JSON response at dnac-swim-physical-images-all.json"
+
+
+  - pause:
+        seconds: 1
+
+
+  - name: create some file
+    template: src="empty.txt" dest="dnac-swim-physical-images.json"
+
+  - name: SWIM deviceId to .json File (dnac-swim-physical-images.json)
+    local_action:
+      module: copy
+      dest: "dnac-swim-physical-images.json"
+      content: "deviceId: '{{ image.json.response[Family | int].runningImageList[0].deviceUuidList }}' "
+  - name: SWIM imageId to .json File (dnac-swim-physical-images.json)
+    local_action:
+      module: lineinfile
+      dest: "dnac-swim-physical-images.json"
+      line: "imageId: '{{ image.json.response[Family | int].runningImageList[5].imageUuid }}' "
+      insertafter: EOF
+
+  - name: Saving entire JSON response to dnac-swim-physical-images-all.json
+    local_action:
+      module: copy
+      dest: "dnac-swim-physical-images-all.json"
+      #line: "imageId: '{{ image.json.response[1].runningImageList[0].imageUuid }}' "
+      content: "{{image}}"
+
+#Playbook to Distribute Image and receive taskID and URL
+- name: Playbook to Distribute Image and receive taskID and URL
+  hosts: localhost
+# This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+   - vars.yml
+   - dnac-swim-physical-images.json
+
+  tasks:
+
+  - name: Get Token
+    uri:
+      url: "{{ dnac_url }}api/system/v1/auth/token"
+      # Calling a Login URL
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      force_basic_auth: yes
+
+      headers:
+        Content-Type: "application/json"
+      return_content: yes
+      validate_certs: no
+      # And don't validate the server cert as it's self-signed for non-prod.
+    register: token
+  - name: Distribute
+    uri:
+      url: "{{ dnac_url }}api/v1/image/distribution"
+      #body: '[{"deviceUuid":"{{deviceId}}", "imageUuid": "{{imageId}}"}]'
+      body: '[{"deviceUuid":"1a85db61-8bf2-4717-9060-9776f42e4581", "imageUuid": "{{imageId}}"}]'
+      body_format: json
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: yes
+      validate_certs: no
+      status_code: 200, 201, 202, 203, 204, 205, 206, 207, 208
+    register: result
+
+  - name: Inventory Details
+    debug: msg="{{ result.json.response.taskId }}"
+    debug:
+      msg:
+        - "taskId: {{ result.json.response.taskId }}"
+        - "url: {{result.json.response.url}}"
+        - "Running task for Status"
+  - pause:
+        seconds: 1
+
+  - name: create some file
+    template: src="empty.txt" dest="dnac-swim-taskID-license.json"
+
+  - name: SWIM taskId to .json File
+    local_action:
+      module: copy
+      dest: "dnac-swim-taskID-license.json"
+      content: "taskId: {{ result.json.response.taskId }}"
+- name: Playbook to retrieve status of Distrubute taskID
+  hosts: localhost
+# This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+    - vars.yml
+    - dnac-swim-taskId-license.json
+
+
+  tasks:
+
+  - name: Get Token
+    uri:
+      url: "{{ dnac_url }}api/system/v1/auth/token"
+      # Calling a Login URL
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      force_basic_auth: yes
+      headers:
+        Content-Type: "application/json"
+      return_content: no
+      validate_certs: no
+      # And don't validate the server cert as it's self-signed for non-prod.
+    register: token
+
+
+  - name: Get taskID
+    uri:
+      url: "{{ dnac_url }}api/v1/task/{{taskId}}"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: task
+
+  - name: "{{taskId}} status"
+    #debug: var=network_device
+    debug: msg="{{ task.json.response }}"

@@ -1,0 +1,101 @@
+- name: Playbook for DNAC PAth Trace
+  hosts: localhost
+# This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+
+  - name: Get Token
+    uri:
+      url: "{{ dnac_url }}api/system/v1/auth/token"
+      # Calling a Login URL
+      method: POST
+      user: "{{ dnac_user }}"
+      password: "{{ dnac_password }}"
+      force_basic_auth: yes
+      headers:
+        Content-Type: "application/json"
+      return_content: no
+      validate_certs: no
+      # And don't validate the server cert as it's self-signed for non-prod.
+    register: token
+
+
+  - name: Get network_devices
+    uri:
+      url: "{{ dnac_url }}api/v1/network-device/"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: network_device
+
+
+  - name: Inventory Details
+    debug:
+     msg:
+      #- "{{network_device.json.response[0].hostname }} {{ network_device.json.response[0].managementIpAddress}}"
+      - "{{network_device.json.response[1].hostname }} {{ network_device.json.response[1].managementIpAddress}}"
+      - "{{network_device.json.response[2].hostname }} {{ network_device.json.response[2].managementIpAddress}}"
+
+
+
+  - name: Inventory Details to File
+    local_action: copy content={{ network_device.json.response }} dest=dnac-inventory.json
+- hosts: localhost
+  # This calls localhost as we're just interacting with a REST API endpoint.
+
+  vars_files:
+      - vars.yml
+  vars_prompt:
+      - name: sourceIp
+        prompt: "Please enter source IP address for path trace "
+        private: no
+      - name: destIp
+        prompt: "Please enter destination IP address for path trace "
+        private: no
+
+  tasks:
+
+
+  - name: Post Path Trace
+    uri:
+       url: "{{ dnac_url }}api/v1/flow-analysis"
+       #body: {"name": "cmd", "commands": ["{{cmd}}"],"deviceUuids" : ["{{ deviceId }}"]}
+       body: {   "sourceIP" : "{{sourceIp}}", "destIP" : "{{destIp}}"}
+       body_format: json
+       method: POST
+       user: "{{ dnac_user }}"
+       password: "{{ dnac_password }}"
+       headers:
+         Content-Type: "application/json"
+         Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+       return_content: yes
+       validate_certs: no
+       status_code: 200, 201, 202, 203, 204, 205, 206, 207, 208
+    register: flow
+
+
+  - name: Get Path Trace Results
+    uri:
+      url: "{{ dnac_url }}api/v1/flow-analysis/{{flow.json.response.flowAnalysisId}}"
+      # the main API endpoint
+      method: GET
+      # This is a GET request.
+      headers:
+        Content-Type: "application/json"
+        Cookie: "X-JWT-ACCESS-TOKEN={{token.json.Token}}"
+      return_content: no
+      validate_certs: no
+    register: flows
+
+  - name: flow-analysis Details
+    debug:
+      msg:
+        - "{{flows.json.response}}"

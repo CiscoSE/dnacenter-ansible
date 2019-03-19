@@ -20,7 +20,10 @@ On windows folow this link: http://www.oznetnerd.com/installing-ansible-windows/
 
 Clone this repository:
 ```
-git 
+git clone https://github.com/CiscoSE/dnacenter-ansible.git
+```
+
+
 
 
 

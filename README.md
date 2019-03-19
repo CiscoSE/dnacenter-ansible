@@ -13,9 +13,9 @@ You will find several playbooks that configure DNA Center's APIs similar to the 
 ## Getting Starte:
 
 Install Ansible 2.7 on a MAC or Linux
-'''
+```
 pip install ansible
-'''
+```
 
 
 

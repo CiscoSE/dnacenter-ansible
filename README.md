@@ -134,7 +134,7 @@ Please enter destination IP address for path trace : 10.10.22.73
 ### Truncated
 
 ## Network Plug and Play
-Run this set of playbooks to add new deives and claim them in DNA Center from a .csv spreadsheet. Please note these devices are not connected so they're not contacted.
+Run this set of playbooks to add new deives and claim them in DNA Center from a .csv spreadsheet. Please note these devices are not connected so they're not contacted. If the devices were added later they would use a default workflow and template for the PNP configuration. The playbook code is adjustable to support additional workflow selections.
 
 Step 1: Review https://sandboxdnac.cisco.com to make sure their are no existing devices added or claimed. 
 user: devnetuser pass: Cisco123!
@@ -176,6 +176,23 @@ Step 6: Verify the devices were added and claimed on https://sandboxdnac.cisco.c
 <img width="1337" alt="Screenshot 2019-03-19 22 18 54" src="https://user-images.githubusercontent.com/11307137/54654817-dc699400-4a95-11e9-8d9f-d4cf1df8ede7.png">
 
 ## SWIM 
+The following playbook is used to distirbute image updates to existing devices. This play book is set to work with the Cat 9K golden image. You will find that everything works in DNA Center but ultimately fails becuase of a configuration issue and lack of SFTP server for the Devnet Sanbox. Other playbooks ideas for uploading new images from your laprop using the API as well as activating the images on devices might be added later.
+
+```
+$ ansible-playbook playbooks/swim/dnac-swim-image-distribution.yml
+
+TASK [SWIM Details Physical] ********************************************************
+ok: [localhost] => {
+    "msg": [
+        "deviceId: []",
+        "imageId: 9f0c005b-33d2-4e07-9227-90ce79ef06ff",
+        "name: cat9k_iosxe.16.06.04a.SPA.bin ",
+        "deviceFamily: Cisco Catalyst 9300 Switch ",
+        "View the entire JSON response at dnac-swim-physical-images-all.json"
+ ```
+ The Playbook will run with no errors but if you check the device at https://sandboxdnac.cisco.com the SCP error is found.
+ 
+ 
 
 
 

@@ -11,7 +11,7 @@ Use these playbooks to explore several ansible technigues to interact with DNA C
 You will find several playbooks that configure DNA Center's APIs similar to the GUI. These playbook examples cover only a subset of available API feature capabilities. Due to parsing JSON for variables, some index items need to be adjusted or added to work outside the Devnet Sandbox.
 
 ## Issue with Sandbox
-If someone has deleted the Sandbox devices, you can restore the connected devices from a backup. See the system settings.
+If someone has deleted the Sandbox devices, you can restore the connected devices from a backup. See the system settings. Select the baseline backup for restore.
 
 <img width="1351" alt="Screenshot 2019-03-19 23 14 40" src="https://user-images.githubusercontent.com/11307137/54656683-01153a00-4a9d-11e9-8885-a6a529e79ba6.png">
 

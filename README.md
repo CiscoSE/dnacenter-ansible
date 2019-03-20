@@ -196,7 +196,7 @@ ok: [localhost] => {
         "deviceFamily: Cisco Catalyst 9300 Switch ",
         "View the entire JSON response at dnac-swim-physical-images-all.json"
  ```
- check the device update status at https://sandboxdnac.cisco.com t
+ check the device update status at https://sandboxdnac.cisco.com 
  
 
 

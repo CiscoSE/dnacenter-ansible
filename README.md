@@ -131,6 +131,13 @@ Please enter destination IP address for path trace : 10.10.22.73
                     "role": "ACCESS",
                     "type": "Switches and Hubs"
 ```
-# Truncated
+### Truncated
+
+## Network Plug and Play
+Run this set of playbooks to add new deives and claim them in DNA Center from a .csv spreadsheet. Please note these devices are not connected so they aren't active.
+
+Step 1: Review https://sandboxdnac.cisco.com to make sure their are no existing devices added or claimed. 
+user: devnetuser pass: Cisco123!
+
 
 

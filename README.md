@@ -13,6 +13,7 @@ You will find several playbooks that configure DNA Center's APIs similar to the 
 ## Issue with Sandbox
 If you find that someone has deleted the Sandbox devices, you can restore devices from a backup. See the system settings.
 
+<img width="1351" alt="Screenshot 2019-03-19 23 14 40" src="https://user-images.githubusercontent.com/11307137/54656683-01153a00-4a9d-11e9-8885-a6a529e79ba6.png">
 
 
 ## Getting Started:

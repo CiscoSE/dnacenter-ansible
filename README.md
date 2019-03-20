@@ -1,11 +1,11 @@
 # dnacenter-ansible
 
 ## Background:
-Please see these example playbooks to explore in https://sandboxdnac.cisco.com prior to official Ansible module availability for DNA Center. As of March 2019 these playbooks predate the official modules that are "work in progress" according to the BU.
+These example playbooks were developed to explore in https://sandboxdnac.cisco.com prior to official Ansible module availability for DNA Center. As of March 2019 these playbooks predate the official Cisco modules that are "work in progress" according to the BU.
 Hense, these playbooks should become superseded by Cisco supported modules and not supported long term, or converted to roles. 
 
 ## Purpose: 
-Use these playbooks to explore several ansible technigues to interact with DNA Center APIs with Ansible. These playbooks were written to interact with the devnet always on sandbox. The sandbox credentials are included in the host file. Please note, the playbooks are not intended for production networks, which will require supported modules. Also, for lab usage outside of the Devnet Sandbox, these playbooks require modifications. 
+Use these playbooks to explore several ansible technigues to interact with DNA Center APIs with Ansible. These playbooks were written to interact with the devnet always on sandbox. The sandbox credentials are included in the var file. Please note, the playbooks are not intended for production networks, rather the upcoming supported modules are necessary for production. For lab usage these  playbooks are doable outside of the Devnet Sandbox but in some cases require modifications. 
 
 ## What you will find:
 You will find several playbooks that configure DNA Center's APIs similar to the GUI. These playbook examples cover only a subset of available API feature capabilities. Due to parsing JSON for variables, some index items need to be adjusted or added to work outside the Devnet Sandbox.

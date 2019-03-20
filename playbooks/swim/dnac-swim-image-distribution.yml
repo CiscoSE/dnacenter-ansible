@@ -46,7 +46,7 @@
 
     debug:
       msg:
-        - "deviceId: {{ image.json.response[Family | int].runningImageList[0].deviceUuidList }}"
+        - "deviceId: {{ image.json.response[Family | int].runningImageList[0].deviceUuidList[0] }}"
         - "imageId: {{ image.json.response[Family | int].runningImageList[5].imageUuid }}"
         - "name: {{ image.json.response[Family | int].runningImageList[0].name }} "
         - "deviceFamily: {{ image.json.response[Family | int].deviceFamily}} "
@@ -64,7 +64,7 @@
     local_action:
       module: copy
       dest: "dnac-swim-physical-images.json"
-      content: "deviceId: '{{ image.json.response[Family | int].runningImageList[0].deviceUuidList }}' "
+      content: "deviceId: '{{ image.json.response[Family | int].runningImageList[0].deviceUuidList[0] }}' "
   - name: SWIM imageId to .json File (dnac-swim-physical-images.json)
     local_action:
       module: lineinfile
@@ -72,11 +72,12 @@
       line: "imageId: '{{ image.json.response[Family | int].runningImageList[5].imageUuid }}' "
       insertafter: EOF
 
+
+
   - name: Saving entire JSON response to dnac-swim-physical-images-all.json
     local_action:
       module: copy
       dest: "dnac-swim-physical-images-all.json"
-      #line: "imageId: '{{ image.json.response[1].runningImageList[0].imageUuid }}' "
       content: "{{image}}"
 
 #Playbook to Distribute Image and receive taskID and URL
@@ -109,7 +110,7 @@
     uri:
       url: "{{ dnac_url }}api/v1/image/distribution"
       #body: '[{"deviceUuid":"{{deviceId}}", "imageUuid": "{{imageId}}"}]'
-      body: '[{"deviceUuid":"1a85db61-8bf2-4717-9060-9776f42e4581", "imageUuid": "{{imageId}}"}]'
+      body: '[{"deviceUuid":"{{deviceId}}", "imageUuid": "{{imageId}}"}]'
       body_format: json
       method: POST
       user: "{{ dnac_user }}"

@@ -65,7 +65,7 @@ Command Runner allows read-only level CLI commands to run from the DNA Center AP
 ```
 $ ansible-playbook playbooks/command-runner/dnac-command-runner.yml
 ```
-The sandbox only has a few devices so select from the options by pasting the deviceId to the prompt
+The Devnetsandbox only has a few devices so select from the two options by pasting the deviceId into the prompt. Please review the Playbook/YAML code to learn how prompts provide an option for input of variables.
 
 ```
 TASK [DeviceId] ****************************************************************************************
@@ -92,6 +92,45 @@ ok: [localhost] => {
 ```
 Adjust your terminal width to make more readable.
 
+## Path-trace:
 
+Run this playbook to glean the path between two devices in DNA Center. Although the Sandbox is a small, in a larger environment this feature provides multiple hops and other path detailsbeyond CDP etc.
+
+```
+$ ansible-playbook playbooks/path-trace/dnac-path-trace.yml
+
+TASK [Inventory Details] ************************************************************
+ok: [localhost] => {
+    "msg": [
+        "cat_9k_1.marius.x-trem.ro 10.10.22.66",
+        "cs3850.marius.x-trem.ro 10.10.22.73"
+    ]
+}
+
+TASK [Inventory Details to File] ****************************************************
+changed: [localhost -> localhost]
+Please enter source IP address for path trace : 10.10.22.66
+Please enter destination IP address for path trace : 10.10.22.73
+
+ "msg": [
+        {
+            "lastUpdate": "Wed Mar 20 02:10:28 UTC 2019",
+            "networkElementsInfo": [
+                {
+                    "egressInterface": {
+                        "physicalInterface": {
+                            "id": "8352aa72-4851-4023-a765-d07004f6e524",
+                            "name": "TenGigabitEthernet1/1/1",
+                            "usedVlan": "NA"
+                        }
+                    },
+                    "id": "1a85db61-8bf2-4717-9060-9776f42e4581",
+                    "ip": "10.10.22.66",
+                    "linkInformationSource": "OSPF",
+                    "name": "cat_9k_1.marius.x-trem.ro",
+                    "role": "ACCESS",
+                    "type": "Switches and Hubs"
+```
+# Truncated
 
 

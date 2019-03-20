@@ -8,7 +8,7 @@ Hense, these playbooks should become superseded by Cisco supported modules and n
 Use these playbooks to explore several ansible technigues to interact with DNA Center APIs with Ansible. These playbooks were written to interact with the devnet always on sandbox. The sandbox credentials are included in the var file. Please note, the playbooks are not intended for production networks, rather the upcoming supported modules are necessary for production. For lab usage these  playbooks are doable outside of the Devnet Sandbox but in some cases require modifications. 
 
 ## What you will find:
-You will find several playbooks that configure DNA Center's APIs similar to the GUI. These playbook examples cover only a subset of available API feature capabilities. Due to parsing JSON for variables, some index items need to be adjusted or added to work outside the Devnet Sandbox.
+You will find several playbooks that configure DNA Center's APIs similar to the GUI. The current playbook examples cover a subset of the available DNA Center API capabilities. If you like these playbooks you can use them in your own lab. However, due to parsing JSON for variables, some index items may need to be adjusted or added to work outside of the Devnet Sandbox.
 
 ## Issue with Sandbox
 If someone has deleted the Sandbox devices, you can restore the connected devices from a backup. See the system settings. Select the ansiblebackup or if not available, select the baseline backup for restore.

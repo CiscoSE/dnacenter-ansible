@@ -76,6 +76,9 @@ ok: [localhost] => {
     ]
 }
 Please enter the device ID: 1a85db61-8bf2-4717-9060-9776f42e4581
+```
+Enter any read only level command. I.e, Show commands , ping etc
+```
 Please enter CLI cmd: sh ip int br
 
 TASK [Print Results] ***********************************************************************************

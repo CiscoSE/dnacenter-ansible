@@ -149,3 +149,9 @@ It's normal to receive an error after playbook iterates through the last device 
 
 Step 3: Verify https://sandboxdnac.cisco.com that Network Plug and Play is empty.
 
+<img width="1281" alt="Screenshot 2019-03-19 22 32 17" src="https://user-images.githubusercontent.com/11307137/54655096-f8216a00-4a96-11e9-95c1-5711e4c757ea.png">
+
+Srep 4: Review pnp.csv for list of devices. The current playbook supports adding ten devices. Modify code to increase rows. Also review the parse_csv.py file to understand how to import .csv file into Ansible using JSON.
+
+
+

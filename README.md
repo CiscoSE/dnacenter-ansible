@@ -139,5 +139,6 @@ Run this set of playbooks to add new deives and claim them in DNA Center from a 
 Step 1: Review https://sandboxdnac.cisco.com to make sure their are no existing devices added or claimed. 
 user: devnetuser pass: Cisco123!
 
+<img width="1337" alt="Screenshot 2019-03-19 22 18 54" src="https://user-images.githubusercontent.com/11307137/54654817-dc699400-4a95-11e9-8d9f-d4cf1df8ede7.png">
 
 

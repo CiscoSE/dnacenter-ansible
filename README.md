@@ -134,11 +134,18 @@ Please enter destination IP address for path trace : 10.10.22.73
 ### Truncated
 
 ## Network Plug and Play
-Run this set of playbooks to add new deives and claim them in DNA Center from a .csv spreadsheet. Please note these devices are not connected so they aren't active.
+Run this set of playbooks to add new deives and claim them in DNA Center from a .csv spreadsheet. Please note these devices are not connected so they're not contacted.
 
 Step 1: Review https://sandboxdnac.cisco.com to make sure their are no existing devices added or claimed. 
 user: devnetuser pass: Cisco123!
 
 <img width="1337" alt="Screenshot 2019-03-19 22 18 54" src="https://user-images.githubusercontent.com/11307137/54654817-dc699400-4a95-11e9-8d9f-d4cf1df8ede7.png">
 
+Step 2: Run this Playbook to remove any existing devices.
+```
+$ ansible-playbook playbooks/path-trace/dnac-path-trace.yml
+```
+It's normal to receive an error after playbook iterates through the last device during deletion. 
+
+Step 3: Verify https://sandboxdnac.cisco.com that Network Plug and Play is empty.
 

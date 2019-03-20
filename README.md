@@ -190,7 +190,9 @@ ok: [localhost] => {
         "deviceFamily: Cisco Catalyst 9300 Switch ",
         "View the entire JSON response at dnac-swim-physical-images-all.json"
  ```
- The Playbook will run with no errors but if you check the device at https://sandboxdnac.cisco.com the SCP error is found.
+ The Playbook will run with no errors but if you check the device at https://sandboxdnac.cisco.com the SFTP error is found.
+ 
+ <img width="713" alt="Screenshot 2019-03-19 22 57 39" src="https://user-images.githubusercontent.com/11307137/54656061-9ebb3a00-4a9a-11e9-8ec6-491cadfa968c.png">
  
  
 

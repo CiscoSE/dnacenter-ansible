@@ -151,7 +151,34 @@ Step 3: Verify https://sandboxdnac.cisco.com that Network Plug and Play is empty
 
 <img width="1281" alt="Screenshot 2019-03-19 22 32 17" src="https://user-images.githubusercontent.com/11307137/54655096-f8216a00-4a96-11e9-95c1-5711e4c757ea.png">
 
-Srep 4: Review pnp.csv for list of devices. The current playbook supports adding ten devices. Modify code to increase rows. Also review the parse_csv.py file to understand how to import .csv file into Ansible using JSON.
+Step 4: Review pnp.csv for list of devices. The current playbook supports adding ten devices. Modify code to increase rows. Also review the parse_csv.py file to understand how to import .csv file into Ansible using JSON.
+
+<img width="265" alt="Screenshot 2019-03-19 22 37 42" src="https://user-images.githubusercontent.com/11307137/54655271-afb67c00-4a97-11e9-838f-4e901cfbbba1.png">
+
+Step 5: Run the following playbook to add new devices from the .csv spreadsheet and claim them in DNA Center.
+```
+$ ansible-playbook playbooks/pnp/dnac-pnp.yml
+
+TASK [PNP Device Import] ************************************************************
+ok: [localhost] => (item={'pnp_name': 'sw1', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'A1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw2', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'B1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw3', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'C1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw4', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'D1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw5', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'E1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw6', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'F1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw7', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'G1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw8', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'H1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw9', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'I1234567890'})
+ok: [localhost] => (item={'pnp_name': 'sw10', 'pnp_pid': 'ws-c9300', 'pnp_sn': 'J1234567890'})
+```
+Step 6: Verify the devices were added and claimed on https://sandboxdnac.cisco.com
+
+<img width="1337" alt="Screenshot 2019-03-19 22 18 54" src="https://user-images.githubusercontent.com/11307137/54654817-dc699400-4a95-11e9-8d9f-d4cf1df8ede7.png">
+
+## SWIM 
+
+
+
 
 
 

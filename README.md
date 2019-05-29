@@ -11,7 +11,7 @@ Use these playbooks to explore several ansible technigues to interact with DNA C
 You will find several playbooks that configure DNA Center's APIs similar to the GUI. The current playbook examples cover a subset of the available DNA Center API capabilities. If you like these playbooks you can use them in your own lab. However, due to parsing JSON for variables, some index items may need to be adjusted or added to work outside of the Devnet Sandbox.
 
 ## Issue with Sandbox
-If someone has modified or deleted the Sandbox devices it may cause failures for these playbooks; however, you can restore the connected devices from a specific backup. See the system settings. Select the ansiblebackup or if not available, select the baseline backup for restore.
+If someone has modified or deleted the Sandbox devices it may cause failures for these playbooks; however, you can restore the connected devices from a specific backup "demobackup", see below. See the system settings. Select the ansiblebackup or if not available, select the baseline backup for restore.
 
 <img width="1351" alt="Screenshot 2019-03-19 23 14 40" src="https://user-images.githubusercontent.com/11307137/54656683-01153a00-4a9d-11e9-8885-a6a529e79ba6.png">
 
@@ -22,7 +22,7 @@ Install Ansible 2.7 on a MAC or Linux
 ```
 pip install ansible
 ```
-On windows folow this link: http://www.oznetnerd.com/installing-ansible-windows/
+On windows follow this link: http://www.oznetnerd.com/installing-ansible-windows/
 
 Clone this repository:
 ```
